@@ -40,17 +40,20 @@ def step_impl(context, task_name):
 @then('the output should contain')
 def step_impl(context):
     expected_output = context.text.strip().splitlines()
-    actual_output = todo_list.list_tasks().splitlines()
+    actual_output = todo_list.list_tasks().strip().splitlines()
 
-    # Adding the 'Tasks:' header to expected_output
-    expected_output = ["Tasks:"] + expected_output
+    # Add the 'Tasks:' header to the expected_output if it's not already present
+    if expected_output[0] != "Tasks:":
+        expected_output = ["Tasks:"] + expected_output
 
     # Print both expected and actual outputs for debugging
     print("Expected output:", expected_output)
     print("Actual output:", actual_output)
 
+    # Check that both outputs have the same number of lines
     assert len(expected_output) == len(actual_output), f"Expected {len(expected_output)} lines but got {len(actual_output)}"
 
+    # Compare each line of the expected and actual output
     for expected_line, actual_line in zip(expected_output, actual_output):
         assert expected_line.strip() == actual_line.strip(), f"Expected line: '{expected_line}' but got '{actual_line}'"
 
